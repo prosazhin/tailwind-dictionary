@@ -1,0 +1,74 @@
+{
+  "name": "tailwind-dictionary",
+  "version": "0.0.1",
+  "description": "tailwind-dictionary",
+  "license": "MIT",
+  "author": "Evgenii Sazhin <prosazhin@gmail.com> (https://prosazhin.ru)",
+  "keywords": [
+    "tailwind dictionary",
+    "tailwind",
+    "style dictionary",
+    "style",
+    "dictionary",
+    "css",
+    "less",
+    "scss",
+    "design",
+    "tokens"
+  ],
+  "homepage": "https://github.com/prosazhin/tailwind-dictionary",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prosazhin/tailwind-dictionary.git"
+  },
+  "bugs": {
+    "url": "https://github.com/prosazhin/tailwind-dictionary/issues"
+  },
+  "bin": {
+    "mixin-dictionary": "./bin/mixin-dictionary.js"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=18.20.3"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "LICENSE"
+  ],
+  "scripts": {
+    "lint": "eslint",
+    "format": "prettier --write \"**/*.{js,json}\"",
+    "prepare": "npx simple-git-hooks"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx --no-install lint-staged --concurrent false",
+    "pre-push": "npm run format",
+    "commit-msg": "npx --no-install commitlint --edit ${1}"
+  },
+  "lint-staged": {
+    "*.{js,json}": "prettier --write",
+    "*.js": "eslint --cache --fix"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "eslint": "^9.6.0",
+    "eslint-config-prettier": "^9.1.0",
+    "fs-extra": "^11.2.0",
+    "lint-staged": "^15.2.7",
+    "prettier": "^3.3.2",
+    "simple-git-hooks": "^2.11.1",
+    "style-dictionary": "^4.0.0"
+  }
+}
