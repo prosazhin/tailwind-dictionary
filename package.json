@@ -1,7 +1,7 @@
 {
   "name": "tailwind-dictionary",
-  "version": "0.0.1",
-  "description": "tailwind-dictionary",
+  "version": "1.0.0",
+  "description": "Creating a Tailwind Theme from design tokens",
   "license": "MIT",
   "author": "Evgenii Sazhin <prosazhin@gmail.com> (https://prosazhin.ru)",
   "keywords": [
@@ -25,7 +25,7 @@
     "url": "https://github.com/prosazhin/tailwind-dictionary/issues"
   },
   "bin": {
-    "mixin-dictionary": "./bin/mixin-dictionary.js"
+    "tailwind-dictionary": "./bin/tailwind-dictionary.js"
   },
   "type": "module",
   "engines": {
@@ -65,10 +65,12 @@
     "commander": "^12.1.0",
     "eslint": "^9.6.0",
     "eslint-config-prettier": "^9.1.0",
-    "fs-extra": "^11.2.0",
     "lint-staged": "^15.2.7",
     "prettier": "^3.3.2",
-    "simple-git-hooks": "^2.11.1",
+    "simple-git-hooks": "^2.11.1"
+  },
+  "dependencies": {
+    "fs-extra": "^11.2.0",
     "style-dictionary": "^4.0.0"
   }
 }
