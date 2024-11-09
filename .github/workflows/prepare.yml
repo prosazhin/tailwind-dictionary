@@ -1,0 +1,44 @@
+name: Prepare
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  check_versions:
+    name: Check versions
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.current-version }}
+      check_version: ${{ steps.check_version.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get version
+        id: get_version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
+      - name: Check version
+        id: check_version
+        uses: EndBug/version-check@v2
+        with:
+          file-url: https://unpkg.com/tailwind-dictionary@latest/package.json
+          static-checking: localIsNew
+
+  create_tag:
+    name: Create tag
+    if: needs.check_versions.outputs.check_version == 'true'
+    needs: [check_versions]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "TAG_NAME=v${{ needs.check_versions.outputs.version }}" >> $GITHUB_ENV
+      - uses: piszmog/create-tag@v1
+        with:
+          version: ${{ env.TAG_NAME }}
+          message: ${{ github.event.head_commit.message }}
+          token: ${{ secrets.ACCESS_TOKEN }}
