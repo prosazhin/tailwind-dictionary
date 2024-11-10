@@ -37,8 +37,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: echo "TAG_NAME=v${{ needs.check_versions.outputs.version }}" >> $GITHUB_ENV
-      - uses: piszmog/create-tag@v1
+      - uses: joutvhu/create-tag@v1
         with:
-          version: ${{ env.TAG_NAME }}
+          tag_name: ${{ env.TAG_NAME }}
           message: ${{ github.event.head_commit.message }}
-          token: ${{ secrets.ACCESS_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
