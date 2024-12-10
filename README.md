@@ -245,3 +245,70 @@ module.exports = {
   },
 };
 ```
+
+### Example of animation
+
+#### Config
+
+```json
+{
+  ...
+  "themeAliases": {
+    ...
+    "extend": {
+      "animation": "animation",
+      "keyframes": "keyframes"
+    }
+  }
+}
+```
+
+#### Design-tokens
+
+```json
+{
+  "animation": {
+    "show": {
+      "value": "show 300ms ease-in forwards"
+    }
+  },
+  "keyframes": {
+    "show": {
+      "from": {
+        "opacity": {
+          "value": 0,
+          "mixin": "show"
+        }
+      },
+      "to": {
+        "opacity": {
+          "value": 1,
+          "mixin": "show"
+        }
+      }
+    }
+  }
+}
+```
+
+#### Tailwind Theme
+
+```javascript
+module.exports = {
+  extend: {
+    animation: {
+      show: 'show 300ms ease-in forwards',
+    },
+    keyframes: {
+      show: {
+        from: {
+          opacity: 0,
+        },
+        to: {
+          opacity: 1,
+        },
+      },
+    },
+  },
+};
+```
