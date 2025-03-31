@@ -1,6 +1,6 @@
 {
   "name": "tailwind-dictionary",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Creating a Tailwind Theme from design tokens",
   "license": "MIT",
   "author": "Evgenii Sazhin <prosazhin@gmail.com> (https://prosazhin.ru)",
@@ -63,18 +63,19 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
-    "chalk": "^5.3.0",
-    "commander": "^12.1.0",
-    "eslint": "^9.14.0",
-    "eslint-config-prettier": "^9.1.0",
-    "lint-staged": "^15.2.10",
-    "prettier": "^3.3.3",
-    "simple-git-hooks": "^2.11.1"
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "eslint": "^9.23.0",
+    "eslint-config-prettier": "^10.1.1",
+    "lint-staged": "^15.5.0",
+    "prettier": "^3.5.3",
+    "simple-git-hooks": "^2.12.1",
+    "typescript": "^5.8.2"
   },
   "dependencies": {
-    "fs-extra": "^11.2.0",
-    "style-dictionary": "^4.1.4"
+    "fs-extra": "^11.3.0",
+    "style-dictionary": "^4.3.3"
   }
 }
