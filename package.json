@@ -1,6 +1,6 @@
 {
   "name": "tailwind-dictionary",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Creating a Tailwind Theme from design tokens",
   "license": "MIT",
   "author": "Evgenii Sazhin <prosazhin@gmail.com> (https://prosazhin.ru)",
@@ -33,7 +33,7 @@
   },
   "type": "module",
   "engines": {
-    "node": ">=18.20.3"
+    "node": ">=20.0.0"
   },
   "files": [
     "bin",
