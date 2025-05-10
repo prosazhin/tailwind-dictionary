@@ -28,25 +28,48 @@ As an example of usage, you can look at the [pbstyles](https://github.com/prosaz
 
 ```json
 {
+  "version": 4,
   "source": ["tokens/**/*.json"],
   "output": "./styles",
   "themeAliases": { ... }
 }
 ```
 
-| Property     | Type   | Description                                                                                                                                                                             |
-| :----------- | :----- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| source       | Array  | An array of file path [globs](https://github.com/isaacs/node-glob) to design token files. Exactly like [Style Dictionary](https://github.com/amzn/style-dictionary).                    |
-| output       | String | Base path to build the files, must end with a trailing slash. By default is "./styles".                                                                                                 |
-| themeAliases | Object | Aliases for the Tailwind Theme. [Complete theme](https://github.com/tailwindlabs/tailwindcss/blob/master/stubs/config.full.js) and [documentation](https://tailwindcss.com/docs/theme). |
+| Property     | Type   | Description                                                                                                                                                                                     |
+| :----------- | :----- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| version      | Number | Tailwind CSS version (3 or 4). Default is 4.                                                                                                                                                    |
+| source       | Array  | An array of file path [globs](https://github.com/isaacs/node-glob) to design token files. Exactly like [Style Dictionary](https://github.com/amzn/style-dictionary).                            |
+| output       | String | Base path to build the files, must end with a trailing slash. By default is "./styles".                                                                                                         |
+| themeAliases | Object | Aliases for the Tailwind Theme. [Complete theme](https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/theme.css) and [documentation](https://tailwindcss.com/docs/theme). |
 
 ### Example of theme aliases
 
-The entire list of keys for the Tailwind theme can be found in the [documentation](https://tailwindcss.com/docs/theme) or [the full default theme](https://github.com/tailwindlabs/tailwindcss/blob/master/stubs/config.full.js). The most important thing is to use the same keys in the config for the theme as in the original theme, such as “fontFamily”.
+The entire list of keys for the Tailwind theme can be found in the [documentation](https://tailwindcss.com/docs/theme) or [the full default theme](https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/theme.css). The most important thing is to use the same keys in the config for the theme as in the original theme, such as “fontFamily”.
 
 Aliases must include a category for CTI, for example `rounded`. They can also include both a category and a type, for instance `font/family`, where `font` is the category and `family` is the type.
 
-#### Config
+#### Config for Tailwind version 4
+
+```json
+{
+  ...
+  "themeAliases": {
+    "font": "font/family",
+    "font-weight": "font/weight",
+    "leading": "font/leading",
+    "text": "font/size",
+    "color": "color",
+    "spacing": "1",
+    "radius": "rounded",
+    "shadow": "shadow",
+    "breakpoint": "screen",
+    "animation": "animation",
+    "keyframes": "keyframes"
+  }
+}
+```
+
+#### Config for Tailwind version 3
 
 ```json
 {
@@ -55,9 +78,16 @@ Aliases must include a category for CTI, for example `rounded`. They can also in
     "fontFamily": "font/family",
     "fontWeight": "font/weight",
     "lineHeight": "font/leading",
+    "fontSize": "font/size",
+    "colors": "color",
+    "screens": "screen",
+    "spacing": "size",
     "borderRadius": "rounded",
+    "borderWidth": "stroke",
     "extend": {
-      "opacity": "opacity"
+      "opacity": "opacity",
+      "boxShadow": "shadow",
+      "spacing": "container"
     }
   }
 }
@@ -88,16 +118,37 @@ Aliases must include a category for CTI, for example `rounded`. They can also in
     "6": { "value": "6px" },
     "8": { "value": "8px" },
     "999": { "value": "999px" }
-  },
-  "opacity": {
-    "0": { "value": "0" },
-    "50": { "value": "0.5" },
-    "100": { "value": "1" }
   }
 }
 ```
 
-#### Tailwind Theme
+#### Tailwind Theme version 4
+
+```css
+@theme {
+  --*: initial;
+
+  --font-sans: 'Inter', sans-serif;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 600;
+  --font-weight-bold: 700;
+
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+
+  --spacing: 1;
+
+  --radius-0: 0px;
+  --radius-4: 4px;
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --radius-999: 999px;
+}
+```
+
+#### Tailwind Theme version 3
 
 ```javascript
 module.exports = {
@@ -121,20 +172,182 @@ module.exports = {
     8: '8px',
     999: '999px',
   },
-  extend: {
-    opacity: {
-      0: '0',
-      50: '0.5',
-      100: '1',
-    },
-  },
 };
 ```
 
-### Usage in a Tailwind theme
+---
+
+### Usage in a Tailwind theme version 4
+
+```css
+@import 'tailwindcss';
+@import './styles/tailwind/theme.css';
+```
+
+### Example of typography mixins
+
+#### Config
+
+```json
+{
+  ...
+  "themeAliases": {
+    ...
+    "text": "font/size",
+    ...
+  }
+}
+```
+
+#### Design-tokens
+
+```json
+{
+  "font": {
+    "size": {
+      "12": { "value": "{size.12}" },
+      "16": { "value": "{size.16}" },
+      "20": { "value": "{size.20}" }
+    },
+    "h64": {
+      "font-size": {
+        "value": "64px",
+        "mixin": "h64"
+      },
+      "line-height": {
+        "value": "1.25",
+        "mixin": "h64"
+      },
+      "font-weight": {
+        "value": "700",
+        "mixin": "h64"
+      }
+    }
+  }
+}
+```
+
+#### Tailwind Theme
+
+```css
+@theme {
+  --text-12: 12px;
+  --text-16: 16px;
+  --text-20: 20px;
+
+  --text-h64: 64px;
+  --text-h64--line-height: 1.25;
+  --text-h64--font-weight: 700;
+}
+```
+
+### Example of media query
+
+#### Config
+
+```json
+{
+  ...
+  "themeAliases": {
+    ...
+    "breakpoint": "screen",
+    ...
+  }
+}
+```
+
+#### Design-tokens
+
+```json
+{
+  "screen": {
+    "xl": {
+      "min": { "value": "1441px" }
+    },
+    "lg": {
+      "max": { "value": "1440px" },
+      "min": { "value": "921px" }
+    }
+  }
+}
+```
+
+#### Tailwind Theme
+
+```css
+@theme {
+  --breakpoint-xl: 1441px;
+  --breakpoint-lg-max: 1440px;
+  --breakpoint-lg-min: 921px;
+}
+```
+
+### Example of animation
+
+#### Config
+
+```json
+{
+  ...
+  "themeAliases": {
+    ...
+    "animation": "animation",
+    "keyframes": "keyframes"
+  }
+}
+```
+
+#### Design-tokens
+
+```json
+{
+  "animation": {
+    "show": {
+      "value": "show 300ms ease-in forwards"
+    }
+  },
+  "keyframes": {
+    "show": {
+      "from": {
+        "opacity": {
+          "value": 0,
+          "mixin": "show"
+        }
+      },
+      "to": {
+        "opacity": {
+          "value": 1,
+          "mixin": "show"
+        }
+      }
+    }
+  }
+}
+```
+
+#### Tailwind Theme
+
+```css
+@theme {
+  --animation-show: show 300ms ease-in forwards;
+
+  @keyframes show {
+    from: {
+      opacity: 0;
+    }
+    to: {
+      opacity: 1;
+    }
+  }
+}
+```
+
+---
+
+### Usage in a Tailwind theme version 3
 
 ```javascript
-const theme = require('./styles/tailwind-theme');
+const theme = require('./styles/tailwind');
 
 module.exports = {
   ...
