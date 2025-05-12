@@ -59,7 +59,7 @@ Aliases must include a category for CTI, for example `rounded`. They can also in
     "leading": "font/leading",
     "text": "font/size",
     "color": "color",
-    "spacing": "1",
+    "spacing": "1px",
     "radius": "rounded",
     "shadow": "shadow",
     "breakpoint": "screen",
@@ -138,7 +138,7 @@ Aliases must include a category for CTI, for example `rounded`. They can also in
   --leading-tight: 1.25;
   --leading-normal: 1.5;
 
-  --spacing: 1;
+  --spacing: 1px;
 
   --radius-0: 0px;
   --radius-4: 4px;
