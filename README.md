@@ -35,12 +35,13 @@ As an example of usage, you can look at the [pbstyles](https://github.com/prosaz
 }
 ```
 
-| Property     | Type   | Description                                                                                                                                                                                     |
-| :----------- | :----- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| version      | Number | Tailwind CSS version (3 or 4). Default is 4.                                                                                                                                                    |
-| source       | Array  | An array of file path [globs](https://github.com/isaacs/node-glob) to design token files. Exactly like [Style Dictionary](https://github.com/amzn/style-dictionary).                            |
-| output       | String | Base path to build the files, must end with a trailing slash. By default is "./styles".                                                                                                         |
-| themeAliases | Object | Aliases for the Tailwind Theme. [Complete theme](https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/theme.css) and [documentation](https://tailwindcss.com/docs/theme). |
+| Property     | Type   | Required | Description                                                                                                                                                                                     |
+| :----------- | :----- | :------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| version      | Number | yes      | Tailwind CSS version (3 or 4). Default is 4.                                                                                                                                                    |
+| source       | Array  | yes      | An array of file path [globs](https://github.com/isaacs/node-glob) to design token files. Exactly like [Style Dictionary](https://github.com/amzn/style-dictionary).                            |
+| output       | String | yes      | Base path to build the files, must end with a trailing slash. By default is "./styles".                                                                                                         |
+| themeAliases | Object | yes      | Aliases for the Tailwind Theme. [Complete theme](https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/theme.css) and [documentation](https://tailwindcss.com/docs/theme). |
+| themes       | Object | no       | Optional light/dark theme override token files. See [Dark theme](#dark-theme) section below.                                                                                                    |
 
 ### Example of theme aliases
 
@@ -173,6 +174,111 @@ module.exports = {
     999: '999px',
   },
 };
+```
+
+### Example of dark theme
+
+#### Config for Tailwind version 4
+
+```json
+{
+  ...
+  "themes": {
+    "light": ["tokens/themes/light.json"],
+    "dark": ["tokens/themes/dark.json"]
+  }
+}
+```
+
+#### Config for Tailwind version 3
+
+```json
+{
+  ...
+  "themes": {
+    "light": ["tokens/themes/light.json"],
+    "dark": ["tokens/themes/dark.json"]
+  }
+}
+```
+
+#### Design-tokens
+
+```json
+{
+  "color": {
+    "background": { "value": "#ffffff" },
+    "foreground": { "value": "#0f0f0f" }
+  }
+}
+```
+
+`tokens/themes/dark.json`:
+
+```json
+{
+  "color": {
+    "background": { "value": "#0f0f0f" },
+    "foreground": { "value": "#ffffff" }
+  }
+}
+```
+
+#### Tailwind Theme version 4
+
+`theme.css` with dark overrides appended:
+
+```css
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #0f0f0f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #0f0f0f;
+    --color-foreground: #ffffff;
+  }
+}
+
+[data-theme='dark'] {
+  --color-background: #0f0f0f;
+  --color-foreground: #ffffff;
+}
+```
+
+#### Tailwind Theme version 3
+
+`theme.js` with semantic token values replaced by `var()` references:
+
+```javascript
+module.exports = {
+  colors: {
+    background: 'var(--color-background)',
+    foreground: 'var(--color-foreground)',
+  },
+};
+```
+
+`theme.css` generated alongside `theme.js`:
+
+```css
+:root {
+  --color-background: #ffffff;
+  --color-foreground: #0f0f0f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #0f0f0f;
+    --color-foreground: #ffffff;
+  }
+}
+
+[data-theme='dark'] {
+  --color-background: #0f0f0f;
+  --color-foreground: #ffffff;
+}
 ```
 
 ---
