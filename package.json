@@ -1,6 +1,6 @@
 {
   "name": "tailwind-dictionary",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Creating a Tailwind Theme from design tokens",
   "license": "MIT",
   "author": "Evgenii Sazhin <prosazhin@gmail.com> (https://prosazhin.ru)",
@@ -67,9 +67,10 @@
     "registry": "https://registry.npmjs.org/"
   },
   "overrides": {
-    "brace-expansion": "^5.0.6",
+    "brace-expansion": "^5.0.7",
     "flatted": "^3.4.2",
-    "fast-uri": "~3.1.1",
+    "fast-uri": "~3.1.3",
+    "js-yaml": "^4.2.0",
     "qs": "^6.15.2"
   },
   "devDependencies": {
@@ -87,6 +88,6 @@
   },
   "dependencies": {
     "fs-extra": "^11.3.4",
-    "style-dictionary": "^5.4.0"
+    "style-dictionary": "^5.4.4"
   }
 }
