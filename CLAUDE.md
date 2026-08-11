@@ -43,5 +43,4 @@ npm run prepare   # Установить git hooks
 
 1. Обновить `version` в `package.json`
 2. Push в `main`
-3. `prepare.yml` создаёт git-тег при новой версии
-4. Тег триггерит `release.yml` (Node 22.x): npm publish + GitHub Release
+3. `release.yml` (Node 22.x) сверяет версию с npm и, если она новая, публикует пакет + создаёт тег и GitHub Release

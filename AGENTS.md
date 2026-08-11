@@ -32,8 +32,8 @@ lib/
     helpers.js                # Работа с токенами, форматирование, миксины
     logger.js                 # Цветной вывод в консоль (chalk)
 .github/workflows/
-  prepare.yml                 # Проверка версии и создание тега
-  release.yml                 # Публикация в npm и создание GitHub Release (Node 22.x)
+  ci.yml                      # Lint на pull request (Node 22.x)
+  release.yml                 # Проверка версии, публикация в npm, тег и GitHub Release (Node 22.x)
 ```
 
 ## Architecture
@@ -97,5 +97,5 @@ lib/
 
 1. Обновить `version` в `package.json`
 2. Push в `main`
-3. GitHub Actions (`prepare.yml`) сравнивает версию с npm — если локальная новее, создаёт git-тег
-4. Git-тег триггерит `release.yml`: публикация в npm с provenance + создание GitHub Release
+3. `release.yml` (job `gate`) сравнивает версию с npm: если такая версия уже опубликована — релиз пропускается, если `npm view` упал по другой причине — workflow падает
+4. Job `release`: `npm ci` + lint, публикация в npm с provenance, затем тег `v<version>` и GitHub Release одним шагом
