@@ -54,7 +54,8 @@ lib/
    - Style Dictionary для `source + themes.dark` пишет в `cache-dark/index.cjs`
    - `build-dark-theme.js` фильтрует только переопределённые токены и:
      - *v4*: дописывает в начало `theme.css` блок `:root` со светлыми значениями `--<prefix>-<key>-<name>`
-       и dark-переопределения тех же имён в `@media (prefers-color-scheme: dark)` и `[data-theme='dark']`
+       и dark-переопределения тех же имён в `@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) }`
+       и `[data-theme='dark']`, плюс блок `[data-theme='light']` со светлыми значениями (принудительная светлая тема)
      - *v3*: заменяет значения семантических токенов в `theme.js` на `var()`, генерирует `theme.css` с `:root`, media и selector блоками
 
    **Cleanup (finally):** удаляются `cache/` и `cache-dark/`

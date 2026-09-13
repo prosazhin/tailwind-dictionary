@@ -230,6 +230,12 @@ Semantic tokens are exposed as plain CSS variables `--<prefix>-<key>-<name>`, wh
 
 Semantic tokens (the ones overridden by the dark theme) are declared as plain CSS variables `--<prefix>-<key>-<name>` (default prefix is `theme`) in `:root` with dark overrides on the same names, and mapped into the theme via `@theme inline`. Utilities compile to `var(--<prefix>-<key>-<name>)` directly, so the dark theme works on any DOM level (`data-theme="dark"` on a nested container) and with any Tailwind prefix (`@import 'tailwindcss' prefix(tw)`). Non-semantic tokens stay in the regular `@theme` block.
 
+Theme switching works the same way in both versions:
+
+- no attribute — follows the system `prefers-color-scheme`;
+- `data-theme="dark"` — forces the dark theme on the element and its subtree;
+- `data-theme="light"` — forces the light theme: on `<html>` it overrides a dark system scheme, on a nested element it creates a light container inside a dark page.
+
 ```css
 :root {
   --theme-color-background: #ffffff;
@@ -237,7 +243,7 @@ Semantic tokens (the ones overridden by the dark theme) are declared as plain CS
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --theme-color-background: #0f0f0f;
     --theme-color-foreground: #ffffff;
   }
@@ -246,6 +252,11 @@ Semantic tokens (the ones overridden by the dark theme) are declared as plain CS
 [data-theme='dark'] {
   --theme-color-background: #0f0f0f;
   --theme-color-foreground: #ffffff;
+}
+
+[data-theme='light'] {
+  --theme-color-background: #ffffff;
+  --theme-color-foreground: #0f0f0f;
 }
 
 @theme {
@@ -282,7 +293,7 @@ module.exports = {
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --color-background: #0f0f0f;
     --color-foreground: #ffffff;
   }
@@ -291,6 +302,11 @@ module.exports = {
 [data-theme='dark'] {
   --color-background: #0f0f0f;
   --color-foreground: #ffffff;
+}
+
+[data-theme='light'] {
+  --color-background: #ffffff;
+  --color-foreground: #0f0f0f;
 }
 ```
 
