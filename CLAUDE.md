@@ -33,7 +33,7 @@ npm run prepare   # Установить git hooks
 | `themeAliases` | Object | да           | `{}`          |
 | `themes`       | Object | нет          | `null`        |
 
-`themes` — необязательный объект `{ light?: string[], dark?: string[] }`. Отсутствие ключа не логируется как ошибка.
+`themes` — необязательный объект `{ light?: string[], dark?: string[], prefix?: string }`. Отсутствие ключа не логируется как ошибка. `prefix` — необязательный префикс CSS-переменных семантических токенов в v4 (`--<prefix>-<key>-<name>`; по умолчанию `theme`).
 
 ## Dark theme build flow
 

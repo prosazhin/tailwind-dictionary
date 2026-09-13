@@ -41,7 +41,7 @@ As an example of usage, you can look at the [pbstyles](https://github.com/prosaz
 | source       | Array  | yes      | An array of file path [globs](https://github.com/isaacs/node-glob) to design token files. Exactly like [Style Dictionary](https://github.com/amzn/style-dictionary).                            |
 | output       | String | yes      | Base path to build the files, must end with a trailing slash. By default is "./styles".                                                                                                         |
 | themeAliases | Object | yes      | Aliases for the Tailwind Theme. [Complete theme](https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/theme.css) and [documentation](https://tailwindcss.com/docs/theme). |
-| themes       | Object | no       | Optional light/dark theme override token files. See [Dark theme](#dark-theme) section below.                                                                                                    |
+| themes       | Object | no       | Optional light/dark theme override token files and `prefix` for semantic CSS variables (v4). See [Dark theme](#example-of-dark-theme) section below.                                            |
 
 ### Example of theme aliases
 
@@ -190,6 +190,8 @@ module.exports = {
 }
 ```
 
+Semantic tokens are exposed as plain CSS variables `--<prefix>-<key>-<name>`, where `key` is the theme alias key (`color`, `radius`, …). Optional `prefix` (e.g. `"prefix": "app"`) replaces the default `theme` prefix: `--app-color-background` instead of `--theme-color-background`.
+
 #### Config for Tailwind version 3
 
 ```json
@@ -226,24 +228,35 @@ module.exports = {
 
 #### Tailwind Theme version 4
 
-`theme.css` with dark overrides appended:
+Semantic tokens (the ones overridden by the dark theme) are declared as plain CSS variables `--<prefix>-<key>-<name>` (default prefix is `theme`) in `:root` with dark overrides on the same names, and mapped into the theme via `@theme inline`. Utilities compile to `var(--<prefix>-<key>-<name>)` directly, so the dark theme works on any DOM level (`data-theme="dark"` on a nested container) and with any Tailwind prefix (`@import 'tailwindcss' prefix(tw)`). Non-semantic tokens stay in the regular `@theme` block.
 
 ```css
-@theme {
-  --color-background: #ffffff;
-  --color-foreground: #0f0f0f;
+:root {
+  --theme-color-background: #ffffff;
+  --theme-color-foreground: #0f0f0f;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: #0f0f0f;
-    --color-foreground: #ffffff;
+    --theme-color-background: #0f0f0f;
+    --theme-color-foreground: #ffffff;
   }
 }
 
 [data-theme='dark'] {
-  --color-background: #0f0f0f;
-  --color-foreground: #ffffff;
+  --theme-color-background: #0f0f0f;
+  --theme-color-foreground: #ffffff;
+}
+
+@theme {
+  --*: initial;
+
+  --color-*: initial;
+}
+
+@theme inline {
+  --color-background: var(--theme-color-background);
+  --color-foreground: var(--theme-color-foreground);
 }
 ```
 

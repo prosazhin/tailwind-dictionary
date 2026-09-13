@@ -44,15 +44,18 @@ lib/
    **Проход 1 — светлая тема:**
    - Если задан `themes.light`, к `source` добавляются файлы `themes.light`
    - Style Dictionary записывает промежуточный модуль в `cache/index.cjs`
-   - Для v3 + наличия `themes.dark` light-токены сохраняются до следующего шага
+   - `get-semantic-paths` собирает пути семантических токенов из файлов `themes.dark`
+   - При наличии `themes.dark` light-токены сохраняются до следующего шага
    - `build-theme.js` читает `cache/` и вызывает `build-v3.js` или `build-v4.js`
+     - *v4*: семантические токены исключаются из `@theme` и выносятся в `@theme inline`
+       как `--<key>-<name>: var(--<prefix>-<key>-<name>)` (`themes.prefix`, по умолчанию `theme`)
 
    **Проход 2 — тёмная тема** (только если задан `themes.dark`):
    - Style Dictionary для `source + themes.dark` пишет в `cache-dark/index.cjs`
-   - `get-semantic-paths` собирает пути токенов из файлов `themes.dark`
    - `build-dark-theme.js` фильтрует только переопределённые токены и:
-     - *v4*: дописывает в `theme.css` блоки `@media (prefers-color-scheme: dark)` и `[data-theme='dark']`
-     - *v3*: заменяет значения семантических токенов в `theme.js` на `var()`, генерирует `tokens.css` с `:root`, media и selector блоками
+     - *v4*: дописывает в начало `theme.css` блок `:root` со светлыми значениями `--<prefix>-<key>-<name>`
+       и dark-переопределения тех же имён в `@media (prefers-color-scheme: dark)` и `[data-theme='dark']`
+     - *v3*: заменяет значения семантических токенов в `theme.js` на `var()`, генерирует `theme.css` с `:root`, media и selector блоками
 
    **Cleanup (finally):** удаляются `cache/` и `cache-dark/`
 
