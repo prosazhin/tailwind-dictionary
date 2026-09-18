@@ -1,5 +1,7 @@
 # Tailwind Dictionary
 
+[Documentation](https://prosazhin.dev/docs/tailwind-dictionary)
+
 Tailwind Dictionary is a package based on [Style Dictionary](https://github.com/amzn/style-dictionary) that allows creating a Tailwind Theme from design tokens.
 
 ## Installation
