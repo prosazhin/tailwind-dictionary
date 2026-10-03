@@ -1,0 +1,25 @@
+:root {
+  --color-primary: #2563eb;
+  --color-background: #f9fafb;
+  --color-foreground: #111827;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-primary: #3380f5;
+    --color-background: #111827;
+    --color-foreground: #f9fafb;
+  }
+}
+
+[data-theme='dark'] {
+  --color-primary: #3380f5;
+  --color-background: #111827;
+  --color-foreground: #f9fafb;
+}
+
+[data-theme='light'] {
+  --color-primary: #2563eb;
+  --color-background: #f9fafb;
+  --color-foreground: #111827;
+}

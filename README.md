@@ -110,6 +110,7 @@ As an example of usage, you can look at the [pbstyles](https://github.com/prosaz
 | output       | String | yes      | Folder for the result. The folder is created if it does not exist. Default is "./styles".                                                                                                       |
 | themeAliases | Object | yes      | Aliases for the Tailwind Theme. [Complete theme](https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/theme.css) and [documentation](https://tailwindcss.com/docs/theme). |
 | themes       | Object | no       | Theme token files (`light`, `dark`, any other name), `default` theme and `prefix` for semantic CSS variables (v4). See [Themes](#themes).                                                       |
+| numberUnit   | String | no       | Unit for bare numbers (`"$type": "number"`) in dimension keys: `"px"` (default), `"rem"` (value / 16) or `false` (keep the number). See [From Figma](#from-figma).                              |
 
 ### Example of theme aliases
 
@@ -402,6 +403,48 @@ The group (text style, breakpoint, keyframes) name can be set explicitly:
 ```
 
 The legacy `mixin` field still works and has the highest priority.
+
+## From Figma
+
+The native Figma export works without conversion: **Variables → right click on a collection → Export modes** gives one
+`*.tokens.json` file per mode (DTCG).
+
+1. Put the file with the primitives (the collection without modes) into `source`.
+2. Put the files of the modes into `themes`: one file per theme (`light`, `dark`, …). The file name does not matter.
+
+```json
+{
+  "version": 4,
+  "source": ["tokens/Primitives.tokens.json"],
+  "themes": {
+    "light": ["tokens/Light.tokens.json"],
+    "dark": ["tokens/Dark.tokens.json"]
+  },
+  "output": "./styles",
+  "themeAliases": {
+    "color": "color",
+    "radius": "radius",
+    "spacing": "1px",
+    "font": "font/family",
+    "text": "font/size"
+  }
+}
+```
+
+Colors given as objects (`colorSpace`, `components`, `hex`), aliases (`"{color.blue.600}"`) and the service
+`$extensions` (`com.figma.*`) are handled. Figma exports a FLOAT variable as a number without a unit, which is not a
+valid CSS length, so bare numbers (`"$type": "number"`) in dimension keys get a unit:
+
+| Key                                                                                                         | `numberUnit: "px"` (default) | `numberUnit: "rem"` | `numberUnit: false` |
+| :---------------------------------------------------------------------------------------------------------- | :--------------------------- | :------------------ | :------------------ |
+| `radius`, `text`, `breakpoint`, `container`, `blur` (v3: `borderRadius`, `fontSize`, `screens`, `width`, …) | `4` → `4px`                  | `4` → `0.25rem`     | `4` → `4`           |
+
+Other keys (`leading`, `font-weight`, `opacity`, `z-index`, …) and `0` stay numbers.
+
+`themeAliases.spacing` in v4 is the base unit (`"1px"` or `"0.25rem"`), not a path to a token; otherwise the build prints a warning.
+
+Limits of the native export: Figma does not export the variable `description`, and composite styles (typography,
+shadows) are incomplete.
 
 ## Themes
 

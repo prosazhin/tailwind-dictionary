@@ -12,6 +12,7 @@
 | `multi-theme-v4`, `multi-theme-v3` | три темы и `themes.default` |
 | `dtcg-composite-v4` | составные типы DTCG: typography, shadow, color, группы без `mixin`, `$extensions` |
 | `zero-values-v4` | токены со значением `0` (B2) |
+| `figma-export-v4`, `figma-export-v3` | нативная выгрузка Figma: файл на режим, цвета объектом, `number` и `dimension`, `numberUnit` по умолчанию |
 | `direct-source` | путь к файлу в `source` и отсутствующая папка `output` (B1, B4) |
 
 Осознанные отличия эталонов от вывода версии 2.3.2:

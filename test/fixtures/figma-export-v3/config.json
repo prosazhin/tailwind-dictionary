@@ -1,0 +1,14 @@
+{
+  "version": 3,
+  "source": ["tokens/Primitives.tokens.json"],
+  "themes": { "light": ["tokens/Light.tokens.json"], "dark": ["tokens/Dark.tokens.json"] },
+  "output": "./expected",
+  "themeAliases": {
+    "colors": "color",
+    "borderRadius": "radius",
+    "spacing": "size",
+    "fontFamily": "font/family",
+    "fontSize": "font/size",
+    "lineHeight": "leading"
+  }
+}

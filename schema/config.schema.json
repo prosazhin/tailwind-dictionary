@@ -29,6 +29,11 @@
       "$ref": "#/$defs/themeAliases",
       "minProperties": 1
     },
+    "numberUnit": {
+      "description": "Unit for bare numbers (\"$type\": \"number\", e.g. Figma FLOAT variables) in dimension keys (radius, text, breakpoint, container, blur; borderRadius, fontSize, screens, … in v3). \"px\" by default, \"rem\" divides by 16, false keeps the number as is.",
+      "enum": ["px", "rem", false],
+      "default": "px"
+    },
     "themes": {
       "description": "Theme token files. Each key except \"default\" and \"prefix\" is a theme name: \"light\", \"dark\", \"high-contrast\", …",
       "type": ["object", "null"],

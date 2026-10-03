@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.6.0
+
+### Added
+
+- **Figma native export** (Variables → Export modes) works out of the box: sRGB color objects, aliases and
+  `com.figma.*` extensions were already handled; bare numbers are now handled too (see below).
+- `numberUnit` option: unit for bare numbers (`"$type": "number"`, Figma FLOAT variables) in dimension keys.
+  `"px"` by default, `"rem"` divides by 16, `false` keeps the old behaviour. Dimension keys in v4: `spacing`, `radius`,
+  `text` (font size), `breakpoint`, `container`, `blur`; in v3: `spacing`, `borderRadius`, `borderWidth`, `fontSize`,
+  `screens`, `width`, `height`, `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, `size`, `blur`, `inset`, `gap`,
+  `margin`, `padding`. `leading`, `font-weight`, `opacity`, `z-index` and `0` stay numbers.
+- A warning when `themeAliases.spacing` (v4) is not a CSS length like `"1px"` or `"0.25rem"` (for example, a token path).
+- `figma-export-v4` / `figma-export-v3` fixtures.
+
+### Changed
+
+- A bare number in a dimension key now becomes `<n>px` (`--radius-4: 4` → `--radius-4: 4px`). Such output was not
+  valid CSS before. Set `numberUnit: false` to get the previous output.
+
 ## 2.5.0
 
 ### Added

@@ -1,0 +1,49 @@
+{
+  "color": {
+    "blue": {
+      "400": {
+        "$type": "color",
+        "$value": { "colorSpace": "srgb", "components": [0.2, 0.5, 0.96], "alpha": 1, "hex": "#3380F5" },
+        "$extensions": { "com.figma.variableId": "VariableID:1:2", "com.figma.scopes": ["ALL_SCOPES"] }
+      },
+      "600": {
+        "$type": "color",
+        "$value": { "colorSpace": "srgb", "components": [0.149, 0.388, 0.922], "alpha": 1, "hex": "#2563EB" },
+        "$extensions": { "com.figma.variableId": "VariableID:1:3" }
+      }
+    },
+    "gray": {
+      "50": {
+        "$type": "color",
+        "$value": { "colorSpace": "srgb", "components": [0.976, 0.98, 0.984], "alpha": 1, "hex": "#F9FAFB" },
+        "$extensions": { "com.figma.variableId": "VariableID:1:4" }
+      },
+      "900": {
+        "$type": "color",
+        "$value": { "colorSpace": "srgb", "components": [0.067, 0.094, 0.153], "alpha": 1, "hex": "#111827" },
+        "$extensions": { "com.figma.variableId": "VariableID:1:5" }
+      }
+    }
+  },
+  "radius": {
+    "0": { "$type": "number", "$value": 0, "$extensions": { "com.figma.scopes": ["CORNER_RADIUS"] } },
+    "4": { "$type": "number", "$value": 4, "$extensions": { "com.figma.scopes": ["CORNER_RADIUS"] } },
+    "8": { "$type": "dimension", "$value": { "value": 8, "unit": "px" } }
+  },
+  "size": {
+    "2": { "$type": "number", "$value": 8, "$extensions": { "com.figma.scopes": ["GAP"] } },
+    "4": { "$type": "dimension", "$value": { "value": 16, "unit": "px" } }
+  },
+  "font": {
+    "family": {
+      "sans": { "$type": "string", "$value": "Inter", "$extensions": { "com.figma.variableId": "VariableID:1:6" } }
+    },
+    "size": {
+      "sm": { "$type": "number", "$value": 14 },
+      "base": { "$type": "dimension", "$value": { "value": 16, "unit": "px" } }
+    }
+  },
+  "leading": {
+    "normal": { "$type": "number", "$value": 1.5 }
+  }
+}

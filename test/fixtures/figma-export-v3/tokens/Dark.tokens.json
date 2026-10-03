@@ -1,0 +1,19 @@
+{
+  "color": {
+    "primary": {
+      "$type": "color",
+      "$value": "{color.blue.400}",
+      "$extensions": { "com.figma.aliasData": { "targetVariableName": "color/blue/400" } }
+    },
+    "background": {
+      "$type": "color",
+      "$value": "{color.gray.900}",
+      "$extensions": { "com.figma.aliasData": { "targetVariableName": "color/gray/900" } }
+    },
+    "foreground": {
+      "$type": "color",
+      "$value": "{color.gray.50}",
+      "$extensions": { "com.figma.aliasData": { "targetVariableName": "color/gray/50" } }
+    }
+  }
+}
