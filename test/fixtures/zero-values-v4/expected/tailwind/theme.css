@@ -1,0 +1,10 @@
+@theme {
+  --*: initial;
+
+  --opacity-0: 0;
+  --opacity-50: 0.5;
+  --opacity-100: 1;
+
+  --z-0: 0;
+  --z-10: 10;
+}

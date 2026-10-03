@@ -1,0 +1,59 @@
+{
+  "color": {
+    "basic": {
+      "0": { "value": "{color.gray.blue.900}" },
+      "50": { "value": "{color.gray.blue.800}" },
+      "100": { "value": "{color.gray.blue.700}" },
+      "200": { "value": "{color.gray.blue.600}" },
+      "300": { "value": "{color.gray.blue.400}" },
+      "400": { "value": "{color.white}" }
+    },
+    "primary": {
+      "50": { "value": "{color.blue.950}" },
+      "100": { "value": "{color.blue.900}" },
+      "200": { "value": "{color.blue.800}" },
+      "300": { "value": "{color.blue.400}" },
+      "400": { "value": "{color.blue.300}" }
+    },
+    "secondary": {
+      "50": { "value": "{color.gray.blue.800}" },
+      "100": { "value": "{color.gray.blue.700}" },
+      "200": { "value": "{color.gray.blue.600}" },
+      "300": { "value": "{color.gray.blue.300}" },
+      "400": { "value": "{color.gray.blue.200}" }
+    },
+    "success": {
+      "50": { "value": "{color.green.950}" },
+      "100": { "value": "{color.green.900}" },
+      "200": { "value": "{color.green.800}" },
+      "300": { "value": "{color.green.400}" },
+      "400": { "value": "{color.green.300}" }
+    },
+    "danger": {
+      "50": { "value": "{color.red.950}" },
+      "100": { "value": "{color.red.900}" },
+      "200": { "value": "{color.red.800}" },
+      "300": { "value": "{color.red.400}" },
+      "400": { "value": "{color.red.300}" }
+    },
+    "warning": {
+      "50": { "value": "{color.orange.950}" },
+      "100": { "value": "{color.orange.900}" },
+      "200": { "value": "{color.orange.800}" },
+      "300": { "value": "{color.orange.400}" },
+      "400": { "value": "{color.orange.300}" }
+    },
+    "outline": {
+      "primary": { "value": "{color.blue.600}" },
+      "secondary": { "value": "{color.gray.blue.600}" },
+      "success": { "value": "{color.green.600}" },
+      "danger": { "value": "{color.red.600}" },
+      "warning": { "value": "{color.orange.600}" }
+    },
+    "text": {
+      "primary": { "value": "{color.white}" },
+      "secondary": { "value": "{color.gray.blue.400}" },
+      "contrast": { "value": "{color.gray.blue.900}" }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "source": ["tokens/*.json"],
+  "themes": {
+    "light": ["tokens/themes/light.json"],
+    "dark": ["tokens/themes/dark.json"]
+  },
+  "output": "./expected",
+  "themeAliases": { "colors": "color", "borderRadius": "rounded" }
+}

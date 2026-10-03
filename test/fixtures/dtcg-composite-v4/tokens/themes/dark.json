@@ -1,0 +1,6 @@
+{
+  "color": {
+    "$type": "color",
+    "white": { "$value": { "colorSpace": "srgb", "components": [0, 0, 0], "hex": "#000000" } }
+  }
+}

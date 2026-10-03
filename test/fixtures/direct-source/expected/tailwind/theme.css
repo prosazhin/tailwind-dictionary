@@ -1,0 +1,6 @@
+@theme {
+  --*: initial;
+
+  --color-*: initial;
+  --color-white: #ffffff;
+}

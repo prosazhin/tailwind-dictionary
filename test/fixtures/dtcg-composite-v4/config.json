@@ -1,0 +1,20 @@
+{
+  "version": 4,
+  "source": ["tokens/*.json"],
+  "themes": {
+    "dark": ["tokens/themes/dark.json"]
+  },
+  "output": "./expected",
+  "themeAliases": {
+    "font": "font/family",
+    "font-weight": "font/weight",
+    "text": "font/size",
+    "color": "color",
+    "shadow": "shadow",
+    "breakpoint": "screen",
+    "duration": "duration",
+    "ease": "ease",
+    "animation": "animation",
+    "keyframes": "keyframes"
+  }
+}

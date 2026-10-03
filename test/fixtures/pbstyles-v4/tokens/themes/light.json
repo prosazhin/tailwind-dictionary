@@ -1,0 +1,59 @@
+{
+  "color": {
+    "basic": {
+      "0": { "value": "{color.white}" },
+      "50": { "value": "{color.gray.50}" },
+      "100": { "value": "{color.gray.100}" },
+      "200": { "value": "{color.gray.200}" },
+      "300": { "value": "{color.gray.blue.500}" },
+      "400": { "value": "{color.gray.blue.900}" }
+    },
+    "primary": {
+      "50": { "value": "{color.blue.50}" },
+      "100": { "value": "{color.blue.100}" },
+      "200": { "value": "{color.blue.200}" },
+      "300": { "value": "{color.blue.600}" },
+      "400": { "value": "{color.blue.700}" }
+    },
+    "secondary": {
+      "50": { "value": "{color.gray.blue.50}" },
+      "100": { "value": "{color.gray.blue.100}" },
+      "200": { "value": "{color.gray.blue.200}" },
+      "300": { "value": "{color.gray.blue.700}" },
+      "400": { "value": "{color.gray.blue.800}" }
+    },
+    "success": {
+      "50": { "value": "{color.green.50}" },
+      "100": { "value": "{color.green.100}" },
+      "200": { "value": "{color.green.200}" },
+      "300": { "value": "{color.green.600}" },
+      "400": { "value": "{color.green.700}" }
+    },
+    "danger": {
+      "50": { "value": "{color.red.50}" },
+      "100": { "value": "{color.red.100}" },
+      "200": { "value": "{color.red.200}" },
+      "300": { "value": "{color.red.600}" },
+      "400": { "value": "{color.red.700}" }
+    },
+    "warning": {
+      "50": { "value": "{color.orange.50}" },
+      "100": { "value": "{color.orange.100}" },
+      "200": { "value": "{color.orange.200}" },
+      "300": { "value": "{color.orange.500}" },
+      "400": { "value": "{color.orange.600}" }
+    },
+    "outline": {
+      "primary": { "value": "{color.blue.300}" },
+      "secondary": { "value": "{color.gray.300}" },
+      "success": { "value": "{color.green.300}" },
+      "danger": { "value": "{color.red.300}" },
+      "warning": { "value": "{color.orange.300}" }
+    },
+    "text": {
+      "primary": { "value": "{color.gray.blue.900}" },
+      "secondary": { "value": "{color.gray.blue.500}" },
+      "contrast": { "value": "{color.white}" }
+    }
+  }
+}

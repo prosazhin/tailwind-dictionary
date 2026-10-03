@@ -1,0 +1,71 @@
+:root {
+  --theme-color-white: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --theme-color-white: #000000;
+  }
+}
+
+[data-theme='dark'] {
+  --theme-color-white: #000000;
+}
+
+[data-theme='light'] {
+  --theme-color-white: #ffffff;
+}
+
+@theme {
+  --*: initial;
+
+  --font-sans: 'Inter Variable', system-ui, sans-serif;
+  --font-mono: JetBrains Mono, monospace;
+
+  --font-weight-bold: 700;
+
+  --text-16: 16px;
+
+  --text-h48: 3rem;
+  --text-h48--font-weight: 700;
+  --text-h48--letter-spacing: -0.5px;
+  --text-h48--line-height: 1.2;
+
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 1.5;
+  --text-body-lg--font-weight: 400;
+
+  --color-*: initial;
+  --color-ink: rgba(15, 23, 42, 0.5);
+  --color-brand: oklch(0.62 0.19 259.8);
+  --color-glass: color(display-p3 0 0.5 1 / 0.25);
+  --color-none: transparent;
+  --color-string: #123456;
+
+  --shadow-card: 0px 1px 2px 0px rgba(15, 23, 42, 0.5), inset 0px 4px 8px -2px rgba(0, 0, 0, 0.1);
+  --shadow-legacy: 0 1px 2px rgba(0, 0, 0, 0.1);
+
+  --breakpoint-*: initial;
+  --breakpoint-sm: 640px;
+  --breakpoint-lg-min: 1024px;
+  --breakpoint-lg-max: 1439px;
+
+  --duration-fast: 150ms;
+
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+
+  --animation-fade: fade 150ms ease-out;
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@theme inline {
+  --color-white: var(--theme-color-white);
+}

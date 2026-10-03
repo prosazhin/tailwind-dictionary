@@ -1,0 +1,12 @@
+{
+  "version": 4,
+  "source": ["tokens/*.json"],
+  "themes": {
+    "default": "light",
+    "light": ["tokens/themes/light.json"],
+    "dark": ["tokens/themes/dark.json"],
+    "high-contrast": ["tokens/themes/high-contrast.json"]
+  },
+  "output": "./expected",
+  "themeAliases": { "color": "color", "radius": "rounded" }
+}

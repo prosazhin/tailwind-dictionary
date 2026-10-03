@@ -1,0 +1,16 @@
+{
+  "version": 4,
+  "source": ["tokens/*.json"],
+  "output": "./expected",
+  "themeAliases": {
+    "font": "font/family",
+    "font-weight": "font/weight",
+    "leading": "font/leading",
+    "text": "font/size",
+    "spacing": "1px",
+    "radius": "rounded",
+    "breakpoint": "screen",
+    "animation": "animation",
+    "keyframes": "keyframes"
+  }
+}

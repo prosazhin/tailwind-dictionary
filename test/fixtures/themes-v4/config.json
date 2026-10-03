@@ -1,0 +1,11 @@
+{
+  "version": 4,
+  "source": ["tokens/*.json"],
+  "themes": {
+    "light": ["tokens/themes/light.json"],
+    "dark": ["tokens/themes/dark.json"],
+    "prefix": "app"
+  },
+  "output": "./expected",
+  "themeAliases": { "color": "color", "radius": "rounded" }
+}

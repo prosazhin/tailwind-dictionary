@@ -1,0 +1,43 @@
+@theme {
+  --*: initial;
+
+  --font-sans: Inter, sans-serif;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 600;
+  --font-weight-bold: 700;
+
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+
+  --text-12: 12px;
+  --text-16: 16px;
+  --text-20: 20px;
+
+  --text-h64: 64px;
+  --text-h64--line-height: 1.25;
+  --text-h64--font-weight: 700;
+
+  --spacing: 1px;
+
+  --radius-0: 0px;
+  --radius-4: 4px;
+  --radius-999: 999px;
+
+  --breakpoint-*: initial;
+  --breakpoint-xl: 1441px;
+  --breakpoint-lg-max: 1440px;
+  --breakpoint-lg-min: 921px;
+
+  --animation-show: show 300ms ease-in forwards;
+
+  @keyframes show {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}

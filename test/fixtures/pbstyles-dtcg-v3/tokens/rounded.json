@@ -1,0 +1,35 @@
+{
+  "rounded": {
+    "0": {
+      "$value": "{size.0}"
+    },
+    "4": {
+      "$value": "{size.4}"
+    },
+    "6": {
+      "$value": "{size.6}"
+    },
+    "8": {
+      "$value": "{size.8}"
+    },
+    "12": {
+      "$value": "{size.12}"
+    },
+    "16": {
+      "$value": "{size.16}"
+    },
+    "24": {
+      "$value": "{size.24}"
+    },
+    "32": {
+      "$value": "{size.32}"
+    },
+    "999": {
+      "$value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "$type": "dimension"
+  }
+}

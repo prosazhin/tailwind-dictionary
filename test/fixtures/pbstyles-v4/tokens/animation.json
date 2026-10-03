@@ -1,0 +1,40 @@
+{
+  "animation": {
+    "show": {
+      "value": "show 300ms ease-in forwards"
+    },
+    "hide": {
+      "value": "hide 200ms ease-out forwards"
+    }
+  },
+  "keyframes": {
+    "show": {
+      "from": {
+        "opacity": {
+          "value": 0,
+          "mixin": "show"
+        }
+      },
+      "to": {
+        "opacity": {
+          "value": 1,
+          "mixin": "show"
+        }
+      }
+    },
+    "hide": {
+      "from": {
+        "opacity": {
+          "value": 1,
+          "mixin": "hide"
+        }
+      },
+      "to": {
+        "opacity": {
+          "value": 0,
+          "mixin": "hide"
+        }
+      }
+    }
+  }
+}

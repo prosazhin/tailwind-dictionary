@@ -1,0 +1,6 @@
+{
+  "color": {
+    "background": { "value": "{color.black}" },
+    "foreground": { "value": "{color.white}" }
+  }
+}

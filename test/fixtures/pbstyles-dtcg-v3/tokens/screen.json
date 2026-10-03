@@ -1,0 +1,73 @@
+{
+  "screen": {
+    "$type": "dimension",
+    "desktop": {
+      "min": {
+        "$value": "{screen.md.min}"
+      }
+    },
+    "mobile": {
+      "max": {
+        "$value": "{screen.sm.max}"
+      }
+    },
+    "xl": {
+      "min": {
+        "$value": {
+          "value": 1441,
+          "unit": "px"
+        }
+      }
+    },
+    "lg": {
+      "max": {
+        "$value": {
+          "value": 1440,
+          "unit": "px"
+        }
+      },
+      "min": {
+        "$value": {
+          "value": 921,
+          "unit": "px"
+        }
+      }
+    },
+    "md": {
+      "max": {
+        "$value": {
+          "value": 920,
+          "unit": "px"
+        }
+      },
+      "min": {
+        "$value": {
+          "value": 769,
+          "unit": "px"
+        }
+      }
+    },
+    "sm": {
+      "max": {
+        "$value": {
+          "value": 768,
+          "unit": "px"
+        }
+      },
+      "min": {
+        "$value": {
+          "value": 481,
+          "unit": "px"
+        }
+      }
+    },
+    "xs": {
+      "max": {
+        "$value": {
+          "value": 480,
+          "unit": "px"
+        }
+      }
+    }
+  }
+}

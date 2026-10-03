@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://unpkg.com/tailwind-dictionary/schema/config.schema.json",
+  "title": "tailwind-dictionary config",
+  "description": "Config for tailwind-dictionary: design tokens → Tailwind CSS theme (v3 and v4). https://prosazhin.dev/docs/tailwind-dictionary",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": {
+      "description": "Tailwind CSS version. Default is 4.",
+      "enum": [3, 4],
+      "default": 4
+    },
+    "source": {
+      "description": "Globs or file paths of design token files (legacy \"value\" or DTCG \"$value\"). Default is [\"tokens/**/*.json\"].",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "default": ["tokens/**/*.json"]
+    },
+    "output": {
+      "description": "Folder for the result: <output>/tailwind/theme.css (and theme.js for v3). Default is \"./styles\".",
+      "type": "string",
+      "minLength": 1,
+      "default": "./styles"
+    },
+    "themeAliases": {
+      "description": "Tailwind theme key → token path separated by \"/\" (e.g. \"font/family\"). \"extend\" holds aliases for theme.extend (v3).",
+      "$ref": "#/$defs/themeAliases",
+      "minProperties": 1
+    },
+    "themes": {
+      "description": "Theme token files. Each key except \"default\" and \"prefix\" is a theme name: \"light\", \"dark\", \"high-contrast\", …",
+      "type": ["object", "null"],
+      "properties": {
+        "default": {
+          "description": "Theme whose values go to :root. Default is \"light\" (base tokens if there are no light files).",
+          "type": "string"
+        },
+        "prefix": {
+          "description": "Prefix of semantic CSS variables in v4: --<prefix>-<key>-<name>. Default is \"theme\".",
+          "type": "string",
+          "pattern": "^[a-zA-Z][\\w-]*$"
+        }
+      },
+      "additionalProperties": {
+        "description": "Globs or file paths of the theme token files.",
+        "type": "array",
+        "items": { "type": "string", "minLength": 1 },
+        "minItems": 1
+      },
+      "examples": [{ "light": ["tokens/themes/light.json"], "dark": ["tokens/themes/dark.json"] }]
+    }
+  },
+  "required": ["themeAliases"],
+  "additionalProperties": false,
+  "$defs": {
+    "themeAliases": {
+      "type": "object",
+      "properties": {
+        "extend": {
+          "type": "object",
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        }
+      },
+      "additionalProperties": { "type": "string", "minLength": 1 },
+      "examples": [
+        {
+          "font": "font/family",
+          "text": "font/size",
+          "color": "color",
+          "spacing": "1px",
+          "radius": "rounded",
+          "breakpoint": "screen"
+        }
+      ]
+    }
+  }
+}

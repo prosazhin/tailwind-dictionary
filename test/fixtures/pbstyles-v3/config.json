@@ -1,0 +1,27 @@
+{
+  "version": 3,
+  "source": ["tokens/*.json"],
+  "themes": {
+    "light": ["tokens/themes/light.json"],
+    "dark": ["tokens/themes/dark.json"]
+  },
+  "output": "./expected",
+  "themeAliases": {
+    "fontFamily": "font/family",
+    "fontWeight": "font/weight",
+    "lineHeight": "font/leading",
+    "fontSize": "font/size",
+    "colors": "color",
+    "screens": "screen",
+    "spacing": "size",
+    "borderRadius": "rounded",
+    "borderWidth": "stroke",
+    "extend": {
+      "opacity": "opacity",
+      "boxShadow": "shadow",
+      "spacing": "container",
+      "animation": "animation",
+      "keyframes": "keyframes"
+    }
+  }
+}

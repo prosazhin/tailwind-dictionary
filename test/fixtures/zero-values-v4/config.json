@@ -1,0 +1,6 @@
+{
+  "version": 4,
+  "source": ["tokens/*.json"],
+  "output": "./expected",
+  "themeAliases": { "opacity": "opacity", "z": "z" }
+}

@@ -2,104 +2,82 @@
 
 ## Project Overview
 
-CLI-утилита для генерации тем Tailwind CSS (v3 и v4) из design tokens через Style Dictionary. Публикуется как npm-пакет `tailwind-dictionary`.
+CLI-утилита и библиотека для генерации тем Tailwind CSS (v3 и v4) из design tokens через Style Dictionary. Публикуется как npm-пакет `tailwind-dictionary`. Вход — DTCG 2025.10 (`$value`, `$type`) или старый формат (`value`).
 
 ## Tech Stack
 
-- **Язык:** JavaScript (ES Modules, `"type": "module"`)
+- **Язык:** JavaScript (ES Modules, `"type": "module"`), типы через JSDoc → `tsc` в `types/`
 - **Runtime:** Node.js >= 22.0.0
-- **Основные зависимости:** `style-dictionary`, `fs-extra`, `commander`, `chalk`
-- **Линтинг:** ESLint + eslint-config-prettier
-- **Форматирование:** Prettier
+- **Зависимости:** `style-dictionary`, `commander`, `chalk`, `json5` (только для `.json5`-файлов токенов)
+- **Тесты:** `node --test` (snapshot по `test/fixtures/*/expected`)
+- **Линтинг:** ESLint + eslint-config-prettier, **форматирование:** Prettier
 - **Git hooks:** simple-git-hooks + lint-staged + commitlint (conventional commits)
-- **CI/CD:** GitHub Actions (автоматическая публикация в npm при обновлении версии)
+- **CI/CD:** GitHub Actions (lint + тесты на Node 22/24, публикация в npm при новой версии)
 
 ## Project Structure
 
 ```
 bin/
-  tailwind-dictionary.js      # CLI точка входа (commander)
+  tailwind-dictionary.js      # CLI (commander): -c, -w; ошибки DictionaryError — одной строкой, exit 1
 lib/
-  index.js                    # Главный модуль: два прохода SD (light + dark), cleanup в finally
-  build-theme.js              # Загрузка кэша, выбор генератора (v3/v4) для светлой темы
-  build-dark-theme.js         # Генерация тёмной темы: appendV4Dark / appendV3Dark
-  build-v3.js                 # Генератор JS-объекта для Tailwind v3
-  build-v4.js                 # Генератор CSS с @theme для Tailwind v4
-  const.js                    # Константы, DEFAULT_OPTIONS, DEFAULT_VALUE
+  index.js                    # build(config): чтение файлов → generate() → запись в <output>/tailwind
+  generate.js                 # generate({ tokens, themes, themeAliases, version }) → { 'tailwind/theme.css': … } без fs
+  build-v3.js                 # theme.js (module.exports) из плоского списка токенов
+  build-v4.js                 # @theme / @theme inline из плоского списка токенов
+  const.js                    # константы, DEFAULT_OPTIONS, DEFAULT_VALUE
+  types.js                    # JSDoc-типы публичного API
+  tokens/                     # общий с mixin-dictionary код (без fs)
+    walk.js                   # обход дерева, isToken, collectTokenPaths, mergeTokens
+    validate.js               # формат (DTCG/старый), битые ссылки, typography без fontSize, неизвестный $type
+    normalize-value.js        # значения DTCG → строки CSS
+    read-tokens.js            # allTokens Style Dictionary → плоский список { path, value, type, group }
+    groups.js                 # группы: mixin / $extensions / typography / брейкпоинты / keyframes
+    themes.js                 # имена тем, тема по умолчанию, семантические пути
+    theme-blocks.js           # :root, prefers-color-scheme, [data-theme]
+    resolve.js                # Style Dictionary в памяти для базы и каждой темы
+    errors.js                 # DictionaryError
   utils/
-    get-config.js             # Парсинг и валидация конфигурации (включая themes)
-    get-semantic-paths.js     # Сбор путей токенов из файлов тёмной темы
-    helpers.js                # Работа с токенами, форматирование, миксины
-    logger.js                 # Цветной вывод в консоль (chalk)
-.github/workflows/
-  ci.yml                      # Lint на pull request (Node 22.x)
-  release.yml                 # Проверка версии, публикация в npm, тег и GitHub Release (Node 22.x)
+    get-config.js             # чтение и проверка config.json (правила = schema/config.schema.json)
+    read-token-files.js       # глобы → файлы → дерево + карта «путь токена → файл» (общий с mixin-dictionary)
+    watch.js                  # --watch (общий с mixin-dictionary)
+    helpers.js                # alias-ы темы, имена семантических переменных, customFormatting
+    logger.js                 # chalk
+schema/config.schema.json     # JSON Schema конфига
+test/                         # *.test.js, fixtures/, types/
 ```
 
 ## Architecture
 
-1. CLI (`bin/`) парсит аргументы и вызывает `lib/index.js`
-2. `index.js` читает конфиг (`source`, `output`, `themeAliases`, `version`, `themes`) и запускает два прохода в блоке `try/finally`:
-
-   **Проход 1 — светлая тема:**
-   - Если задан `themes.light`, к `source` добавляются файлы `themes.light`
-   - Style Dictionary записывает промежуточный модуль в `cache/index.cjs`
-   - `get-semantic-paths` собирает пути семантических токенов из файлов `themes.dark`
-   - При наличии `themes.dark` light-токены сохраняются до следующего шага
-   - `build-theme.js` читает `cache/` и вызывает `build-v3.js` или `build-v4.js`
-     - *v4*: семантические токены исключаются из `@theme` и выносятся в `@theme inline`
-       как `--<key>-<name>: var(--<prefix>-<key>-<name>)` (`themes.prefix`, по умолчанию `theme`)
-
-   **Проход 2 — тёмная тема** (только если задан `themes.dark`):
-   - Style Dictionary для `source + themes.dark` пишет в `cache-dark/index.cjs`
-   - `build-dark-theme.js` фильтрует только переопределённые токены и:
-     - *v4*: дописывает в начало `theme.css` блок `:root` со светлыми значениями `--<prefix>-<key>-<name>`
-       и dark-переопределения тех же имён в `@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) }`
-       и `[data-theme='dark']`, плюс блок `[data-theme='light']` со светлыми значениями (принудительная светлая тема)
-     - *v3*: заменяет значения семантических токенов в `theme.js` на `var()`, генерирует `theme.css` с `:root`, media и selector блоками
-
-   **Cleanup (finally):** удаляются `cache/` и `cache-dark/`
-
-3. `build-v3.js` создаёт `theme.js` (CommonJS module.exports)
-4. `build-v4.js` создаёт `theme.css` (CSS с `@theme {}`)
+1. CLI (`bin/`) → `build({ config })`; программно — `build(config)` или `generate(...)`.
+2. `build()`: `get-config` → `read-token-files` (глобы `source` и `themes.*`, ошибка `No token files matched`) → `generate()` → запись (папка `output` создаётся рекурсивно).
+3. `generate()`:
+   - `resolveThemes`: проверка дерева (`validate.js`), затем Style Dictionary в памяти для темы по умолчанию (`source` + её файлы) и для каждой другой темы. Старый формат идёт через `transformGroup: 'js'` (вывод не меняется), DTCG — без трансформаций, значения приводит `normalize-value.js`.
+   - Семантические пути — объединение путей всех тем, кроме темы по умолчанию.
+   - Группы (`groups.js`): поле `mixin` → `$extensions["dev.prosazhin.mixin"]` → составная `typography` → брейкпоинты (alias `breakpoint`/`screens`) → keyframes (alias `keyframes`).
+   - *v4*: семантические токены исключаются из `@theme` и выносятся в `@theme inline` как `--<key>-<name>: var(--<prefix>-<key>-<name>)`; перед `@theme` — `:root` (тема по умолчанию), `@media (prefers-color-scheme)` для `light`/`dark`, `[data-theme='<name>']` для каждой темы.
+   - *v3*: `theme.js`, семантические токены → `var(--<path>)` по пути токена; `theme.css` с теми же блоками.
 
 ## Code Conventions
 
-### Стиль кода
-
-- ES Modules: `import`/`export` везде (кроме `eslint.config.cjs`)
-- Функциональный подход, чистые функции где возможно
-- camelCase для функций и переменных
-- kebab-case для файлов
-- UPPER_SNAKE_CASE для констант
-- Именованные экспорты для утилит, default экспорты для главных функций модулей
-- Отступы: 2 пробела, без табов
-- Одинарные кавычки, точки с запятой, trailing commas
-- Максимальная длина строки: 120 символов
-
-### ESLint правила
-
-- `curly: 'error'` — фигурные скобки обязательны
-- `no-shadow: 'error'` — запрет на перекрытие переменных
-- `no-nested-ternary: 'error'` — запрет вложенных тернарных операторов
-
-### Git
-
-- Conventional Commits (commitlint с `@commitlint/config-conventional`)
-- Pre-commit: lint-staged (prettier + eslint --fix)
-- Pre-push: форматирование всех файлов
+- ES Modules, функциональный подход, чистые функции где возможно
+- camelCase / kebab-case файлы / UPPER_SNAKE_CASE константы
+- Именованные экспорты для утилит, default — для главных функций модулей
+- 2 пробела, одинарные кавычки, точки с запятой, trailing commas, до 120 символов
+- ESLint: `curly`, `no-shadow`, `no-nested-ternary`
+- Не удалять существующие возможности и вывод — только улучшать
 
 ## Commands
 
 | Команда | Описание |
 |---------|----------|
-| `npm run lint` | Запуск ESLint |
-| `npm run format` | Форматирование всех `.js` и `.json` файлов через Prettier |
-| `npm run prepare` | Установка git hooks |
+| `npm test` | Snapshot-тесты, тесты ошибок и общего модуля |
+| `npm run test:types` | `.d.ts` + проверка типов на `test/types/usage.ts` |
+| `npm run lint` | ESLint |
+| `npm run format` | Prettier по `.js` и `.json` |
 
 ## Release Process
 
-1. Обновить `version` в `package.json`
+1. Обновить `version` в `package.json` и `CHANGELOG.md`
 2. Push в `main`
-3. `release.yml` (job `gate`) сравнивает версию с npm: если такая версия уже опубликована — релиз пропускается, если `npm view` упал по другой причине — workflow падает
-4. Job `release`: `npm ci` + lint, публикация в npm с provenance, затем тег `v<version>` и GitHub Release одним шагом
+3. `release.yml` (job `gate`) сравнивает версию с npm: если такая версия уже опубликована — релиз пропускается
+4. Job `release`: `npm ci`, lint, тесты, публикация в npm с provenance (`prepublishOnly` собирает `types/`), затем тег `v<version>` и GitHub Release

@@ -1,6 +1,6 @@
 {
   "name": "tailwind-dictionary",
-  "version": "2.3.2",
+  "version": "2.5.0",
   "description": "Creating a Tailwind Theme from design tokens",
   "license": "MIT",
   "author": "Evgenii Sazhin <prosazhin@gmail.com> (https://prosazhin.dev)",
@@ -22,7 +22,10 @@
     "system",
     "design-tokens",
     "design-tool",
-    "design-system"
+    "design-system",
+    "dtcg",
+    "design-tokens-format",
+    "w3c-design-tokens"
   ],
   "homepage": "https://github.com/prosazhin/tailwind-dictionary",
   "repository": {
@@ -36,17 +39,39 @@
     "tailwind-dictionary": "./bin/tailwind-dictionary.js"
   },
   "type": "module",
+  "main": "./lib/index.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./generate": {
+      "types": "./types/generate.d.ts",
+      "default": "./lib/generate.js"
+    },
+    "./schema/config.schema.json": "./schema/config.schema.json",
+    "./lib/*": "./lib/*",
+    "./package.json": "./package.json"
+  },
   "engines": {
     "node": ">=22.0.0"
   },
   "files": [
     "bin",
     "lib",
-    "README.md"
+    "schema",
+    "types",
+    "README.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "lint": "eslint",
     "format": "prettier --write \"**/*.{js,json}\"",
+    "test": "node --test \"test/**/*.test.js\"",
+    "test:types": "npm run build:types && tsc -p test/types/tsconfig.json",
+    "build:types": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build:types",
     "prepare": "npx simple-git-hooks"
   },
   "simple-git-hooks": {
@@ -78,8 +103,6 @@
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@types/node": "^25.7.0",
-    "chalk": "^5.6.2",
-    "commander": "^14.0.3",
     "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
     "lint-staged": "^16.4.0",
@@ -88,7 +111,9 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "fs-extra": "^11.3.4",
-    "style-dictionary": "^5.4.4"
+    "chalk": "^5.6.2",
+    "commander": "^14.0.3",
+    "json5": "^2.2.3",
+    "style-dictionary": "^5.5.0"
   }
 }

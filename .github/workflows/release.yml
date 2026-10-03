@@ -79,6 +79,7 @@ jobs:
 
       - run: npm ci --no-fund --no-audit
       - run: npm run lint
+      - run: npm test
 
       - name: Publish to npm
         run: npm publish --provenance --access public

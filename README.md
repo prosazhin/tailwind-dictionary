@@ -1,15 +1,43 @@
 # Tailwind Dictionary
 
+[![npm version](https://img.shields.io/npm/v/tailwind-dictionary.svg)](https://www.npmjs.com/package/tailwind-dictionary)
+[![npm downloads](https://img.shields.io/npm/dm/tailwind-dictionary.svg)](https://www.npmjs.com/package/tailwind-dictionary)
+[![CI](https://github.com/prosazhin/tailwind-dictionary/actions/workflows/ci.yml/badge.svg)](https://github.com/prosazhin/tailwind-dictionary/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/tailwind-dictionary.svg)](./LICENSE)
+
 [Documentation](https://prosazhin.dev/docs/tailwind-dictionary)
 
-Tailwind Dictionary is a package based on [Style Dictionary](https://github.com/amzn/style-dictionary) that allows creating a Tailwind Theme from design tokens.
+Tailwind Dictionary builds a Tailwind CSS theme (v3 and v4) from design tokens. It is based on [Style Dictionary](https://github.com/style-dictionary/style-dictionary).
 
-## Installation
+## Why this package
+
+- **JSON config, no code.** One `config.json` with token paths and theme aliases — no JS/TS build script to maintain.
+- **DTCG and the legacy format.** Reads [W3C Design Tokens (DTCG 2025.10)](https://www.designtokens.org/tr/2025.10/format/) (`$value`, `$type`, composite `typography` and `shadow`) as exported by Figma, Tokens Studio and Terrazzo, and the legacy Style Dictionary format (`value`) with the same output.
+- **Themes on any DOM level.** Light, dark and any other themes (`high-contrast`, brands, …) switch with `data-theme` on `<html>` or on any nested container, light/dark also follow `prefers-color-scheme`. Works with a Tailwind prefix.
+
+## Quick start
 
 ```bash
-$ npm install tailwind-dictionary --save-dev
-# or
-$ yarn add tailwind-dictionary --dev
+npm install tailwind-dictionary --save-dev
+```
+
+```json
+{
+  "$schema": "./node_modules/tailwind-dictionary/schema/config.schema.json",
+  "version": 4,
+  "source": ["tokens/**/*.json"],
+  "output": "./styles",
+  "themeAliases": { "color": "color", "spacing": "1px", "radius": "rounded" }
+}
+```
+
+```bash
+npx tailwind-dictionary
+```
+
+```css
+@import 'tailwindcss';
+@import './styles/tailwind/theme.css';
 ```
 
 ## Usage
@@ -18,9 +46,44 @@ $ yarn add tailwind-dictionary --dev
 $ tailwind-dictionary
 ```
 
-| Flag              | Short Flag | Description                                      |
-| ----------------- | ---------- | ------------------------------------------------ |
-| --config \[path\] | -c         | Set the config file to use. Must be a .json file |
+| Flag              | Short Flag | Description                                                        |
+| ----------------- | ---------- | ------------------------------------------------------------------ |
+| --config \[path\] | -c         | Set the config file to use. Must be a .json file                   |
+| --watch           | -w         | Rebuild when token files (`source`, `themes`) or the config change |
+| --version         | -v         | Output the current version                                         |
+
+Config and token errors are printed as one line with the file and the token path, the exit code is `1`.
+
+### Programmatic API
+
+```js
+import { build } from 'tailwind-dictionary';
+
+// Same options as config.json. Or: await build({ config: './config.json' })
+const files = await build({
+  version: 4,
+  source: ['tokens/**/*.json'],
+  output: './styles',
+  themeAliases: { color: 'color' },
+});
+```
+
+`generate()` does not touch the file system and works in the browser: it takes token objects and returns file contents.
+
+```js
+import { generate } from 'tailwind-dictionary/generate';
+
+const files = await generate({
+  tokens: { color: { $type: 'color', white: { $value: '#ffffff' } } },
+  themes: { dark: { color: { white: { $value: '#000000' } } } }, // optional
+  themeAliases: { color: 'color' },
+  version: 4,
+});
+
+files['tailwind/theme.css']; // v4; v3 returns 'tailwind/theme.js' (+ 'tailwind/theme.css' with themes)
+```
+
+TypeScript types are included.
 
 ## Example
 
@@ -30,26 +93,29 @@ As an example of usage, you can look at the [pbstyles](https://github.com/prosaz
 
 ```json
 {
+  "$schema": "./node_modules/tailwind-dictionary/schema/config.schema.json",
   "version": 4,
-  "source": ["tokens/**/*.json"],
+  "source": ["tokens/*.json"],
   "output": "./styles",
   "themeAliases": { ... }
 }
 ```
 
+`$schema` enables autocompletion and validation of the config in VS Code and other editors.
+
 | Property     | Type   | Required | Description                                                                                                                                                                                     |
 | :----------- | :----- | :------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | version      | Number | yes      | Tailwind CSS version (3 or 4). Default is 4.                                                                                                                                                    |
-| source       | Array  | yes      | An array of file path [globs](https://github.com/isaacs/node-glob) to design token files. Exactly like [Style Dictionary](https://github.com/amzn/style-dictionary).                            |
-| output       | String | yes      | Base path to build the files, must end with a trailing slash. By default is "./styles".                                                                                                         |
+| source       | Array  | yes      | Globs or file paths of design token files, e.g. `["tokens/*.json"]` or `["tokens/base.json"]`. JSON, JSON5 and JS files are supported. Default is `["tokens/**/*.json"]`.                       |
+| output       | String | yes      | Folder for the result. The folder is created if it does not exist. Default is "./styles".                                                                                                       |
 | themeAliases | Object | yes      | Aliases for the Tailwind Theme. [Complete theme](https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/theme.css) and [documentation](https://tailwindcss.com/docs/theme). |
-| themes       | Object | no       | Optional light/dark theme override token files and `prefix` for semantic CSS variables (v4). See [Dark theme](#example-of-dark-theme) section below.                                            |
+| themes       | Object | no       | Theme token files (`light`, `dark`, any other name), `default` theme and `prefix` for semantic CSS variables (v4). See [Themes](#themes).                                                       |
 
 ### Example of theme aliases
 
 The entire list of keys for the Tailwind theme can be found in the [documentation](https://tailwindcss.com/docs/theme) or [the full default theme](https://github.com/tailwindlabs/tailwindcss/blob/main/packages/tailwindcss/theme.css). The most important thing is to use the same keys in the config for the theme as in the original theme, such as “fontFamily”.
 
-Aliases must include a category for CTI, for example `rounded`. They can also include both a category and a type, for instance `font/family`, where `font` is the category and `family` is the type.
+An alias is a path to the tokens separated by `/`: a category, for example `rounded`, or a category and a type, for instance `font/family`.
 
 #### Config for Tailwind version 4
 
@@ -98,11 +164,13 @@ Aliases must include a category for CTI, for example `rounded`. They can also in
 
 #### Design-tokens
 
+Both formats give the same Tailwind theme. Legacy Style Dictionary format (`value`):
+
 ```json
 {
   "font": {
     "family": {
-      "sans": { "value": "Inter, sans-serif" }
+      "sans": { "value": "'Inter', sans-serif" }
     },
     "weight": {
       "regular": { "value": 400 },
@@ -121,6 +189,39 @@ Aliases must include a category for CTI, for example `rounded`. They can also in
     "6": { "value": "6px" },
     "8": { "value": "8px" },
     "999": { "value": "999px" }
+  }
+}
+```
+
+The same tokens in [DTCG](#dtcg) (`$value`, `$type` set once on the group):
+
+```json
+{
+  "font": {
+    "family": {
+      "$type": "fontFamily",
+      "sans": { "$value": ["Inter", "sans-serif"] }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": { "$value": 400 },
+      "medium": { "$value": 600 },
+      "bold": { "$value": 700 }
+    },
+    "leading": {
+      "$type": "number",
+      "none": { "$value": 1 },
+      "tight": { "$value": 1.25 },
+      "normal": { "$value": 1.5 }
+    }
+  },
+  "rounded": {
+    "$type": "dimension",
+    "0": { "$value": { "value": 0, "unit": "px" } },
+    "4": { "$value": { "value": 4, "unit": "px" } },
+    "6": { "$value": { "value": 6, "unit": "px" } },
+    "8": { "$value": { "value": 8, "unit": "px" } },
+    "999": { "$value": { "value": 999, "unit": "px" } }
   }
 }
 ```
@@ -156,7 +257,7 @@ Aliases must include a category for CTI, for example `rounded`. They can also in
 ```javascript
 module.exports = {
   fontFamily: {
-    sans: 'Inter, sans-serif',
+    sans: "'Inter', sans-serif",
   },
   fontWeight: {
     regular: 400,
@@ -178,9 +279,133 @@ module.exports = {
 };
 ```
 
-### Example of dark theme
+## DTCG
 
-#### Config for Tailwind version 4
+Token files in the [DTCG 2025.10](https://www.designtokens.org/tr/2025.10/format/) format (`$value`, `$type`) are detected automatically. One build uses one format: mixing `value` and `$value` in the same set of files is an error.
+
+| DTCG value                                                         | Output                                                                                 |
+| :----------------------------------------------------------------- | :------------------------------------------------------------------------------------- |
+| `dimension` `{ "value": 16, "unit": "px" }`                        | `16px`                                                                                 |
+| `color` `{ "colorSpace": "srgb", "components": […], "hex": "#…" }` | `#…`, with `alpha` — `rgba(…)`, other color spaces — `oklch(…)`, `color(display-p3 …)` |
+| `fontFamily` `["Inter", "sans-serif"]`                             | `'Inter', sans-serif`                                                                  |
+| `shadow` (object or array of layers)                               | `0px 1px 2px 0px #000000, inset …`                                                     |
+| `duration`, `cubicBezier`, `border`, `transition`                  | `150ms`, `cubic-bezier(…)`, `1px solid #…`, …                                          |
+| string values                                                      | as is                                                                                  |
+
+`$type` is inherited from the parent group. A reference `{group.token}` must point to an existing token, otherwise the build stops with the token path and the file name.
+
+### Simple tokens
+
+```json
+{
+  "color": {
+    "$type": "color",
+    "white": { "$value": { "colorSpace": "srgb", "components": [1, 1, 1], "hex": "#ffffff" } },
+    "text": { "$value": "{color.white}" }
+  },
+  "size": {
+    "$type": "dimension",
+    "16": { "$value": { "value": 16, "unit": "px" } }
+  }
+}
+```
+
+### Typography
+
+A composite `typography` token becomes a text style named after the token (`font.h64` → `h64`), no `mixin` field needed:
+
+```json
+{
+  "font": {
+    "h64": {
+      "$type": "typography",
+      "$value": {
+        "fontSize": "{font.size.64}",
+        "lineHeight": "{font.leading.tight}",
+        "fontWeight": "{font.weight.bold}"
+      }
+    }
+  }
+}
+```
+
+```css
+@theme {
+  --text-h64: 64px;
+  --text-h64--line-height: 1.25;
+  --text-h64--font-weight: 700;
+}
+```
+
+Tailwind v4 `--text-*` supports `line-height`, `letter-spacing` and `font-weight`. Other properties (for example `fontFamily`) are skipped with a warning that names the token. `fontSize` is required.
+
+### Shadow
+
+```json
+{
+  "shadow": {
+    "$type": "shadow",
+    "card": {
+      "$value": [
+        { "color": "#0000001a", "offsetX": "0px", "offsetY": "1px", "blur": "2px", "spread": "0px" },
+        { "color": "#0000001a", "offsetX": "0px", "offsetY": "4px", "blur": "8px", "spread": "-2px", "inset": true }
+      ]
+    }
+  }
+}
+```
+
+```css
+--shadow-card: 0px 1px 2px 0px #0000001a, inset 0px 4px 8px -2px #0000001a;
+```
+
+### Breakpoints and keyframes without `mixin`
+
+Groups are built from the token structure:
+
+- tokens under the `breakpoint` / `screens` alias: `screen.lg.{min,max}` → breakpoint `lg`, `screen.sm` → breakpoint `sm`;
+- tokens under the `keyframes` alias: `keyframes.<name>.<frame>.<property>` → `@keyframes <name>`.
+
+```json
+{
+  "screen": {
+    "$type": "dimension",
+    "lg": {
+      "min": { "$value": { "value": 921, "unit": "px" } },
+      "max": { "$value": { "value": 1440, "unit": "px" } }
+    }
+  },
+  "keyframes": {
+    "$type": "number",
+    "show": {
+      "from": { "opacity": { "$value": 0 } },
+      "to": { "opacity": { "$value": 1 } }
+    }
+  }
+}
+```
+
+### Group name via `$extensions`
+
+The group (text style, breakpoint, keyframes) name can be set explicitly:
+
+```json
+{
+  "font": {
+    "body": {
+      "$type": "typography",
+      "$extensions": { "dev.prosazhin.mixin": "body-lg" },
+      "$value": { "fontSize": "16px", "lineHeight": 1.5 }
+    }
+  }
+}
+```
+
+The legacy `mixin` field still works and has the highest priority.
+
+## Themes
+
+### Config
 
 ```json
 {
@@ -192,21 +417,25 @@ module.exports = {
 }
 ```
 
-Semantic tokens are exposed as plain CSS variables `--<prefix>-<key>-<name>`, where `key` is the theme alias key (`color`, `radius`, …). Optional `prefix` (e.g. `"prefix": "app"`) replaces the default `theme` prefix: `--app-color-background` instead of `--theme-color-background`.
+| Property      | Type       | Description                                                                                                                     |
+| :------------ | :--------- | :------------------------------------------------------------------------------------------------------------------------------ |
+| themes.<name> | `string[]` | Token files of a theme: `light`, `dark` or any other name (`high-contrast`, `brand`, …).                                        |
+| default       | `string`   | Theme whose values go to `:root`. Default is `light`. Without `light` files, `light` means the base tokens from `source`.       |
+| prefix        | `string`   | Prefix of semantic CSS variables in v4: `--<prefix>-<key>-<name>`. Default is `theme`, e.g. `"app"` → `--app-color-background`. |
 
-#### Config for Tailwind version 3
+> **Note:** `source` must not include the theme files themselves — use `tokens/*.json` instead of `tokens/**/*.json`.
 
-```json
-{
-  ...
-  "themes": {
-    "light": ["tokens/themes/light.json"],
-    "dark": ["tokens/themes/dark.json"]
-  }
-}
-```
+Semantic tokens are the tokens defined in the themes other than `default`. If a semantic token is missing in one of the themes, the build prints a warning with the token paths.
+
+Theme switching:
+
+- no attribute — `:root` gets the `default` theme, `light`/`dark` follow the system `prefers-color-scheme`;
+- `data-theme="<name>"` — forces the theme on the element and its subtree, on `<html>` or on any nested container;
+- `data-theme="light"` on `<html>` overrides a dark system scheme; on a nested element it creates a light container inside a dark page.
 
 #### Design-tokens
+
+Legacy format (`value`). `tokens/themes/light.json`:
 
 ```json
 {
@@ -228,15 +457,35 @@ Semantic tokens are exposed as plain CSS variables `--<prefix>-<key>-<name>`, wh
 }
 ```
 
+The same themes in [DTCG](#dtcg) — the output below does not change. `tokens/themes/light.json`:
+
+```json
+{
+  "color": {
+    "$type": "color",
+    "background": { "$value": { "colorSpace": "srgb", "components": [1, 1, 1], "hex": "#ffffff" } },
+    "foreground": { "$value": { "colorSpace": "srgb", "components": [0.0588, 0.0588, 0.0588], "hex": "#0f0f0f" } }
+  }
+}
+```
+
+`tokens/themes/dark.json`:
+
+```json
+{
+  "color": {
+    "$type": "color",
+    "background": { "$value": { "colorSpace": "srgb", "components": [0.0588, 0.0588, 0.0588], "hex": "#0f0f0f" } },
+    "foreground": { "$value": { "colorSpace": "srgb", "components": [1, 1, 1], "hex": "#ffffff" } }
+  }
+}
+```
+
+Theme files use the same format as the `source` files: one build uses one format.
+
 #### Tailwind Theme version 4
 
-Semantic tokens (the ones overridden by the dark theme) are declared as plain CSS variables `--<prefix>-<key>-<name>` (default prefix is `theme`) in `:root` with dark overrides on the same names, and mapped into the theme via `@theme inline`. Utilities compile to `var(--<prefix>-<key>-<name>)` directly, so the dark theme works on any DOM level (`data-theme="dark"` on a nested container) and with any Tailwind prefix (`@import 'tailwindcss' prefix(tw)`). Non-semantic tokens stay in the regular `@theme` block.
-
-Theme switching works the same way in both versions:
-
-- no attribute — follows the system `prefers-color-scheme`;
-- `data-theme="dark"` — forces the dark theme on the element and its subtree;
-- `data-theme="light"` — forces the light theme: on `<html>` it overrides a dark system scheme, on a nested element it creates a light container inside a dark page.
+Semantic tokens are declared as plain CSS variables `--<prefix>-<key>-<name>` in `:root` with theme overrides on the same names, and mapped into the theme via `@theme inline`. Utilities compile to `var(--<prefix>-<key>-<name>)` directly, so themes work on any DOM level (`data-theme="dark"` on a nested container) and with any Tailwind prefix (`@import 'tailwindcss' prefix(tw)`). Non-semantic tokens stay in the regular `@theme` block.
 
 ```css
 :root {
@@ -273,9 +522,36 @@ Theme switching works the same way in both versions:
 }
 ```
 
+#### More than two themes
+
+```json
+{
+  "themes": {
+    "default": "light",
+    "light": ["tokens/themes/light.json"],
+    "dark": ["tokens/themes/dark.json"],
+    "high-contrast": ["tokens/themes/high-contrast.json"]
+  }
+}
+```
+
+Each theme gets its own `[data-theme='<name>']` block. The system dark scheme applies only while no other theme is set on `:root`:
+
+```css
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']):not([data-theme='high-contrast']) { ... }
+}
+
+[data-theme='dark'] { ... }
+
+[data-theme='high-contrast'] { ... }
+
+[data-theme='light'] { ... }
+```
+
 #### Tailwind Theme version 3
 
-`theme.js` with semantic token values replaced by `var()` references:
+`theme.js` with semantic tokens replaced by `var()` references (only the semantic tokens: other tokens with the same value keep their values):
 
 ```javascript
 module.exports = {
@@ -337,6 +613,8 @@ module.exports = {
 ```
 
 #### Design-tokens
+
+Legacy format with the `mixin` field (in DTCG use a [`typography` token](#typography)):
 
 ```json
 {
@@ -446,16 +724,10 @@ module.exports = {
   "keyframes": {
     "show": {
       "from": {
-        "opacity": {
-          "value": 0,
-          "mixin": "show"
-        }
+        "opacity": { "value": 0 }
       },
       "to": {
-        "opacity": {
-          "value": 1,
-          "mixin": "show"
-        }
+        "opacity": { "value": 1 }
       }
     }
   }
@@ -469,10 +741,10 @@ module.exports = {
   --animation-show: show 300ms ease-in forwards;
 
   @keyframes show {
-    from: {
+    from {
       opacity: 0;
     }
-    to: {
+    to {
       opacity: 1;
     }
   }
@@ -484,7 +756,7 @@ module.exports = {
 ### Usage in a Tailwind theme version 3
 
 ```javascript
-const theme = require('./styles/tailwind');
+const theme = require('./styles/tailwind/theme.js');
 
 module.exports = {
   ...
@@ -549,7 +821,7 @@ module.exports = {
     12: '12px',
     16: '16px',
     20: '20px',
-    h64: ['64px', { lineHeight: 1.25, fontWeight: 700 }],
+    h64: ['64px', { lineHeight: '1.25', fontWeight: '700' }],
   },
 };
 ```
@@ -625,16 +897,10 @@ module.exports = {
   "keyframes": {
     "show": {
       "from": {
-        "opacity": {
-          "value": 0,
-          "mixin": "show"
-        }
+        "opacity": { "value": 0 }
       },
       "to": {
-        "opacity": {
-          "value": 1,
-          "mixin": "show"
-        }
+        "opacity": { "value": 1 }
       }
     }
   }
@@ -662,3 +928,22 @@ module.exports = {
   },
 };
 ```
+
+## Comparison
+
+|                                                     | tailwind-dictionary | [sd-tailwindcss-transformer](https://github.com/nado1001/style-dictionary-tailwindcss-transformer) | [Terrazzo](https://terrazzo.app) |
+| :-------------------------------------------------- | :------------------ | :------------------------------------------------------------------------------------------------- | :------------------------------- |
+| DTCG input (`$value`, `$type`, `$type` inheritance) | ✅                  | ✅                                                                                                 | ✅                               |
+| Legacy Style Dictionary format (`value`)            | ✅                  | ✅                                                                                                 | ❌                               |
+| Composite `typography` → text styles                | ✅                  | —                                                                                                  | ✅                               |
+| Composite `shadow` (multi-layer)                    | ✅                  | —                                                                                                  | ✅                               |
+| Light and dark themes, `data-theme` on any level    | ✅                  | ❌                                                                                                 | ✅                               |
+| More than two themes                                | ✅                  | ❌                                                                                                 | ✅                               |
+| Tailwind 3 and 4                                    | ✅                  | ✅                                                                                                 | v4 only                          |
+| Config without JS (JSON + JSON Schema)              | ✅                  | ❌                                                                                                 | ❌                               |
+| Programmatic API and TypeScript types               | ✅                  | ✅                                                                                                 | ✅                               |
+| `--watch`                                           | ✅                  | —                                                                                                  | ✅                               |
+
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md).
