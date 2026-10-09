@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.6.1
+
+### Changed
+
+- README restructured: shorter, with a table of contents, side-by-side v3/v4 examples, links to the documentation pages,
+  related projects, contributing and author sections. Detailed examples moved to the
+  [documentation](https://prosazhin.dev/docs/tailwind-dictionary?lang=en).
+- Russian version of the README: [README.ru.md](./README.ru.md).
+
 ## 2.6.0
 
 ### Added
