@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.6.2
+
+### Changed
+
+- Link to the package website: [prosazhin.dev/tailwind-dictionary](https://prosazhin.dev/tailwind-dictionary?lang=en).
+
 ## 2.6.1
 
 ### Changed
@@ -8,7 +14,6 @@
   related projects, contributing and author sections. Detailed examples moved to the
   [documentation](https://prosazhin.dev/docs/tailwind-dictionary?lang=en).
 - Russian version of the README: [README.ru.md](./README.ru.md).
-- Link to the package website: [prosazhin.dev/tailwind-dictionary](https://prosazhin.dev/tailwind-dictionary?lang=en).
 
 ## 2.6.0
 
