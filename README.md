@@ -10,6 +10,7 @@
 Build a Tailwind CSS theme (v3 and v4) from design tokens — DTCG or the legacy Style Dictionary format — with light,
 dark and any other themes. Based on [Style Dictionary](https://github.com/style-dictionary/style-dictionary).
 
+🌐 [Website](https://prosazhin.dev/tailwind-dictionary?lang=en) ·
 📖 [Documentation](https://prosazhin.dev/docs/tailwind-dictionary?lang=en) ·
 🧪 [Playground](https://prosazhin.dev/docs/tailwind-dictionary/playground?lang=en) ·
 📝 [Changelog](./CHANGELOG.md)

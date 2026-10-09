@@ -10,6 +10,7 @@
 Тема Tailwind CSS (v3 и v4) из дизайн-токенов в формате DTCG или старом формате Style Dictionary — со светлой, тёмной
 и любыми другими темами. Работает на основе [Style Dictionary](https://github.com/style-dictionary/style-dictionary).
 
+🌐 [Сайт](https://prosazhin.dev/tailwind-dictionary?lang=ru) ·
 📖 [Документация](https://prosazhin.dev/docs/tailwind-dictionary?lang=ru) ·
 🧪 [Плейграунд](https://prosazhin.dev/docs/tailwind-dictionary/playground?lang=ru) ·
 📝 [Changelog](./CHANGELOG.md)
